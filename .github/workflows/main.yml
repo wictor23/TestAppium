@@ -8,16 +8,18 @@ on:
 
 jobs:
   android_diniz:
-    imagem: budtmo/docker-android-x86-8.1
-    privileged: true
-    env:
-      - DEVICE="Samsung Galaxy S6"
-      - APPIUM=true 
-    ports:
-      - 6080:6080
-      - 5554:5554
-      - 5555:5555
-      - 4723:4723
+    runs-on: ubuntu-latest
+    services:
+      imagem: budtmo/docker-android-x86-8.1
+      privileged: true
+      env:
+        - DEVICE="Samsung Galaxy S6"
+        - APPIUM=true 
+      ports:
+        - 6080:6080
+        - 5554:5554
+        - 5555:5555
+        - 4723:4723
 
   # OfertaPlayUbuntuManual:
   #   runs-on: macOS-latest
