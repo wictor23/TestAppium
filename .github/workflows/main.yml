@@ -9,18 +9,6 @@ on:
 jobs:
   android_diniz:
     runs-on: ubuntu-latest
-    services:
-      imagem: budtmo/docker-android-x86-8.1
-      privileged: true
-      env:
-        - DEVICE="Samsung Galaxy S6"
-        - APPIUM=true 
-      ports:
-        - 6080:6080
-        - 5554:5554
-        - 5555:5555
-        - 4723:4723
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node JS 12
@@ -31,7 +19,7 @@ jobs:
         run: |
           sudo npm install react-native-cli -g
           npm install
-          
+
       - uses: actions/download-artifact@v2
         with:
           name: my-artifact
