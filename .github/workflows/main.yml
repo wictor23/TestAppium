@@ -127,8 +127,10 @@ jobs:
           sleep 15
           cd TestAppOferta/
           mvn test
-      - uses: actions/checkout@v2
+          
+      
       - name: Upload Imagens
+        uses: actions/checkout@v2
       - uses: actions/upload-artifact@v2
         with:
           name: Result Test
