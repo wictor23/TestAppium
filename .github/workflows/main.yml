@@ -7,8 +7,82 @@ on:
     branches: [ dev, master ]
 
 jobs:
-  android_diniz:
-    runs-on: ubuntu-latest
+  # OfertaPlay:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: set up JDK 1.8
+  #       uses: actions/setup-java@v1
+  #       with:
+  #         java-version: 1.8
+  #     - name: Build and run app
+  #       run: |
+  #         npm install
+  #         npm run start:oferta
+  #         docker run --rm -v $PWD:/tmp -w /tmp budtmo/docker-android-x86-8.1 bash -c 'cd /tmp/android && ./gradlew clean && ./gradlew app:assembleRelease && ./gradlew app:bundleRelease'
+  #         docker run --privileged -d -v $PWD/android/app/build/outputs/apk/release/:/app -p 6080:6080 -p 4723:4723 -p 5554:5554 -p 5555:5555 -e DEVICE="Nexus 5" -e APPIUM=true -e CONNECT_TO_GRID=true -e APPIUM_HOST="127.0.0.1" -e APPIUM_PORT=4723 -e SELENIUM_HOST="172.17.0.1" -e SELENIUM_PORT=4444 --name android budtmo/docker-android-x86-8.1
+  #         cd android/app/build/outputs/apk/release/
+  #         adb install app-release.apk
+  #     - name: Upload apk
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: app-release.apk
+  #         path: android/app/build/outputs/apk/release/
+
+  # OfertaPlayMacOs:
+  #     runs-on: macOS-latest
+  #     steps:
+  #       - uses: actions/checkout@v2
+  #       - name: Set up Node JS 12
+  #         uses: actions/setup-node@v1
+  #         with:
+  #           node-version: '12.19.0'
+  #       - name: Install depedencies
+  #         run: |
+  #           sudo npm install react-native-cli -g
+  #           npm install
+  #       - name: Run Android Emulator
+  #         run: |
+  #           echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86_64'
+  #           echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_device -k 'system-images;android-28;google_apis;x86_64' --force
+  #           echo $ANDROID_HOME/emulator/emulator -list-avds
+  #           echo "Starting emulator"
+  #           nohup $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot > /dev/null 2>&1 &
+  #           $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+  #           $ANDROID_HOME/platform-tools/adb devices
+  #           echo "Emulator started"
+  #       - name: Start the Appium Server
+  #         run: $(npm bin)/appium --log-timestamp --log-no-colors --allow-insecure chromedriver_autodownload > appium.log &
+  #       - name: Poll for Appium Server to Start
+  #         run: |
+  #           until $(curl --output /dev/null --silent --head --fail http://127.0.0.1:4723/wd/hub/sessions); do
+  #             sleep 5
+  #           done
+  #       - name: Open Metro Bundler in Background
+  #         run: |
+  #           node_modules/react-native/scripts/launchPackager.command &
+  #       - name: Build Android App and Run Tests
+  #         env:
+  #           E2E_TEST_PLATFORM: 'android'
+  #           E2E_TEST_DEFAULTS: 'true'
+  #           E2E_TEST_TAGS: 'E2E'
+  #         run: |
+  #           npm run android:release
+  #           sleep 15
+  #       - name: Upload Appium logs
+  #         uses: actions/upload-artifact@v1
+  #         with:
+  #           name: appium.log
+  #           path: appium.log
+  #       - name: Upload Test Results
+  #         uses: actions/upload-artifact@v1
+  #         with:
+  #           name: e2e-results
+  #           path: __tests__/e2e/output
+
+
+  OfertaPlayUbuntuManual:
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node JS 12
@@ -19,79 +93,47 @@ jobs:
         run: |
           sudo npm install react-native-cli -g
           npm install
-          
-          
-      - uses: actions/checkout@v2
+      - name: Run Android Emulator
+        run: |
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86_64'
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_device -k 'system-images;android-28;google_apis;x86_64' --force
+          echo $ANDROID_HOME/emulator/emulator -list-avds
+          echo "Starting emulator"
+          nohup $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot > /dev/null 2>&1 &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+          $ANDROID_HOME/platform-tools/adb devices
+          echo "Emulator started"
+      - name: Start the Appium Server
+        run: $(npm bin)/appium --log-timestamp --log-no-colors --allow-insecure chromedriver_autodownload > appium.log &
+      - name: Poll for Appium Server to Start
+        run: |
+          until $(curl --output /dev/null --silent --head --fail http://127.0.0.1:4723/wd/hub/sessions); do
+            sleep 5
+          done
+      - name: Open Metro Bundler in Background
+        run: |
+          node_modules/react-native/scripts/launchPackager.command &
+      - name: Build Android And Install App
+        env:
+          E2E_TEST_PLATFORM: 'android'
+          E2E_TEST_DEFAULTS: 'true'
+          E2E_TEST_TAGS: 'E2E'
+        run: |
+          npm run android:release
 
-      - run: mkdir -p path/to/artifact
 
-      - run: echo hello > path/to/artifact/world.txt
-      - run: echo hello > path/to/artifact/Diniz.txt
-      - run: echo hello > path/to/artifact/capibara.txt
-      - run: echo hello > path/to/artifact/celfit.txt
-      - run: echo hello > path/to/artifact/pacto.txt
-      - run: echo hello > path/to/artifact/gustavo.txt
-      - run: echo hello > path/to/artifact/vini.txt
-      - run: ls
+      - name: Test Runner
+          sleep 15
+          cd TestAppOferta/
+          mvn test
+
+      - name: Upload Imagens
       - uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
-          path: path/to/artifact/*
+          name: Result Test
+          path: TestAppOferta/src/test/java/Testes/imagens/*
+
       - uses: actions/download-artifact@v2
         with:
-          name: my-artifact
+          name: Result Test
           run: ls -R
-
-  # OfertaPlayUbuntuManual:
-  #   runs-on: macOS-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Node JS 12
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: '12.19.0'
-  #     - name: Install depedencies
-  #       run: |
-  #         sudo npm install react-native-cli -g
-  #         npm install
-  #     - name: Run Android Emulator
-  #       run: |
-  #         echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86_64'
-  #         echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_device -k 'system-images;android-28;google_apis;x86_64' --force
-  #         echo $ANDROID_HOME/emulator/emulator -list-avds
-  #         echo "Starting emulator"
-  #         nohup $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot > /dev/null 2>&1 &
-  #         $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-  #         $ANDROID_HOME/platform-tools/adb devices
-  #         echo "Emulator started"
-  #     - name: Start the Appium Server
-  #       run: $(npm bin)/appium --log-timestamp --log-no-colors --allow-insecure chromedriver_autodownload > appium.log &
-  #     - name: Poll for Appium Server to Start
-  #       run: |
-  #         until $(curl --output /dev/null --silent --head --fail http://127.0.0.1:4723/wd/hub/sessions); do
-  #           sleep 5
-  #         done
-  #     - name: Open Metro Bundler in Background
-  #       run: |
-  #         node_modules/react-native/scripts/launchPackager.command &
-  #     - name: Build Android App and Run Tests
-  #       env:
-  #         E2E_TEST_PLATFORM: 'android'
-  #         E2E_TEST_DEFAULTS: 'true'
-  #         E2E_TEST_TAGS: 'E2E'
-  #       run: |
-  #         npm run android:release
-  #         sleep 15
-  #         cd TestAppOferta/
-  #         mvn test
-  #     - name: Upload Appium logs
-  #       uses: actions/upload-artifact@v1
-  #       with:
-  #         name: appium.log
-  #         path: appium.log
-  #     # - name: Upload Test Results
-  #     #   uses: actions/upload-artifact@v1
-  #     #   with:
-  #     #     name: e2e-results
-  #     #     path: __tests__/e2e/output
-         
