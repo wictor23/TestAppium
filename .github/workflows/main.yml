@@ -123,7 +123,7 @@ jobs:
 
       
       - name: Test Runner
-      - uses: actions/checkout@v2
+        uses: actions/setup-node@v1
           sleep 15
           cd TestAppOferta/
           mvn test
