@@ -82,7 +82,7 @@ jobs:
 
 
   OfertaPlayUbuntuManual:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node JS 12
