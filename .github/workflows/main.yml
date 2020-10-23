@@ -122,19 +122,19 @@ jobs:
           npm run android:release
 
       
-#       - name: Test Runner
-#         uses: actions/setup-node@v1
-#           sleep 15
-#           cd TestAppOferta/
-#           mvn test
+      - name: Test Runner
+        uses: actions/setup-node@v1
+          sleep 15
+          cd TestAppOferta/
+          mvn test
 
-      - name: Upload Imagens
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Result Test
-          path: TestAppOferta/src/test/java/Testes/imagens/*
+#       - name: Upload Imagens
+#       - uses: actions/upload-artifact@v2
+#         with:
+#           name: Result Test
+#           path: TestAppOferta/src/test/java/Testes/imagens/*
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: Result Test
-          run: ls -R
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: Result Test
+#           run: ls -R
