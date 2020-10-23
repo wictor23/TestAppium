@@ -135,8 +135,12 @@ jobs:
         with:
           name: Result Test
           path: TestAppOferta/src/test/java/Testes/imagens/*
-
+          
+        
+      - name: Download Imagens
+        uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
+        
         with:
           name: Result Test
           run: ls -R
