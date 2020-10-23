@@ -136,7 +136,7 @@ jobs:
           name: Result Test
           path: TestAppOferta/src/test/java/Testes/imagens/*
 
-#       - uses: actions/download-artifact@v2
-#         with:
-#           name: Result Test
-#           run: ls -R
+      - uses: actions/download-artifact@v2
+        with:
+          name: Result Test
+          run: ls -R
