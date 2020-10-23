@@ -26,12 +26,17 @@ jobs:
       - run: mkdir -p path/to/artifact
 
       - run: echo hello > path/to/artifact/world.txt
-
+      - run: echo hello > path/to/artifact/Diniz.txt
+      - run: echo hello > path/to/artifact/capibara.txt
+      - run: echo hello > path/to/artifact/celfit.txt
+      - run: echo hello > path/to/artifact/pacto.txt
+      - run: echo hello > path/to/artifact/gustavo.txt
+      - run: echo hello > path/to/artifact/vini.txt
       - run: ls
       - uses: actions/upload-artifact@v2
         with:
           name: my-artifact
-          path: path/to/artifact/world.txt
+          path: path/to/artifact/*
       - uses: actions/download-artifact@v2
         with:
           name: my-artifact
