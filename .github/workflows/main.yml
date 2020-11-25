@@ -35,8 +35,8 @@ jobs:
           sudo npm install react-native-cli -g
           npm install
       - name: Run Android Emulator
+        uses: vgaidarji/android-github-actions-emulator@v1.0.1
         run: |
-          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-21;default;x86_64'
           echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_device -k 'system-images;android-28;google_apis;x86_64' --force
           echo $ANDROID_HOME/emulator/emulator -list-avds
           echo "Starting emulator"
