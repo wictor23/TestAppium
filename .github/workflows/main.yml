@@ -18,6 +18,10 @@ jobs:
       with:
         api-level: 29
         script: ./gradlew connectedCheck
+    - name: Install depedencies
+      run: |
+        adb devices
+
   # OfertaPlayMacOs:
   #     runs-on: macOS-latest
   #     steps:
