@@ -7,25 +7,30 @@ on:
     branches: [ dev, master ]
 
 jobs:
-  ttest:
-    runs-on: macOS-latest
-    strategy:
-      matrix:
-        api-level: [21, 23, 29]
-        arch: [x86, x86_64]
+  OfertaPlayUbuntuManual:
+    runs-on: macos-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v2
-
-    - name: run tests
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: ${{ matrix.api-level }}
-        arch: ${{ matrix.arch }}
-        
-    - name: Install depedencies
-      run: |
-        adb devices
+      - uses: actions/checkout@v2
+      - name: Set up Node JS 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.19.0'
+      - name: Install depedencies
+        run: |
+          sudo npm install react-native-cli -g
+          npm install
+      - name: Run Android Emulator
+        run: |
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_device -k 'system-images;android-28;google_apis;x86_64' --force
+          echo $ANDROID_HOME/emulator/emulator -list-avds
+          echo "Starting emulator"
+          nohup $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot > /dev/null 2>&1 &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+          $ANDROID_HOME/platform-tools/adb devices
+          echo "Emulator started"
+      - name: Install DINIZ
+        run: |
+          adb devices
 
   # OfertaPlayMacOs:
   #     runs-on: macOS-latest
