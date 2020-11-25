@@ -22,12 +22,7 @@ jobs:
       with:
         api-level: ${{ matrix.api-level }}
         arch: ${{ matrix.arch }}
-
-    - name: run tests
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: ${{ matrix.api-level }}
-        arch: ${{ matrix.arch }}
+        
     - name: Install depedencies
       run: |
         adb devices
